@@ -1,4 +1,4 @@
-name: Build APK Final
+name: Build APK
 on:
   push:
     branches: [main]
@@ -11,11 +11,22 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - name: Build
+
+      - name: Cari dan Rakit APK
         run: |
+          # Perintah ini akan mencari di mana file gradlew berada otomatis
+          GRADLEW_PATH=$(find . -name gradlew | head -n 1)
+          if [ -z "$GRADLEW_PATH" ]; then
+            echo "Aduh beb, file gradlew gak ketemu di mana-mana!"
+            exit 1
+          fi
+          DIR_PATH=$(dirname "$GRADLEW_PATH")
+          cd "$DIR_PATH"
           chmod +x gradlew
           ./gradlew assembleDebug
-      - uses: actions/upload-artifact@v4
+
+      - name: Upload Hasil
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: "**/build/outputs/apk/debug/*.apk"
