@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK Final
 on:
   push:
     branches: [main]
@@ -13,10 +13,9 @@ jobs:
           distribution: 'temurin'
       - name: Build
         run: |
-          cd android
           chmod +x gradlew
           ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: android/app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
